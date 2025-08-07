@@ -1,95 +1,60 @@
-📦 Post Management API (Backend)
+# 📦 Book Post Management - Backend
 
-Hệ thống API quản lý bài viết sử dụng Node.js, Express, MongoDB và Cloudinary để quản lý bài viết, xác thực người dùng với JWT.
+This is the backend project for **Book Post Management Web App**, built with **Node.js**, **Express**, **MongoDB**, **Cloudinary**, and **JWT**.
 
-🚀 Tính năng chính
+## ✅ Features
 
-Đăng ký / Đăng nhập người dùng
+- ✅ Register & Login with JWT Authentication
+- ✅ Role-based Access: `user`, `admin`, `controller`
+- ✅ Upload images to **Cloudinary**
+- ✅ CRUD Post Management
+- ✅ Authorization: Only the post owner can edit/delete their posts
 
-Tạo, chỉnh sửa, xóa bài viết (chỉ khi đã đăng nhập)
+## 🧠 Project Structure
 
-Chỉ cho phép người tạo bài viết chỉnh sửa/xóa bài viết đó
-
-Upload ảnh bài viết lên Cloudinary
-
-Xác thực người dùng qua JWT (Bearer Token)
-
-🧠 Luồng hoạt động
-
-Đăng ký / Đăng nhập
-
-Người dùng tạo tài khoản hoặc đăng nhập tại /register và /login
-
-Server tạo JWT Token và trả về client
-
-Xác thực JWT
-
-Client lưu token trong LocalStorage
-
-Gửi token qua Authorization: Bearer <token> trong các request cần xác thực
-
-Middleware verifyToken kiểm tra token và gán thông tin user vào req.user
-
-Quản lý bài viết
-
-Người dùng đã đăng nhập có thể:
-
-Gửi POST /posts để tạo bài viết
-
-Gửi PUT /posts/:id để chỉnh sửa bài viết của chính mình
-
-Gửi DELETE /posts/:id để xóa bài viết của chính mình
-
-Ảnh sẽ được upload lên Cloudinary và lưu URL trong MongoDB
-
-🧾 Cấu trúc thư mục
-
-📁 backend/
-├── index.js              # Điểm khởi chạy server
-├── models/
-│   └── Post.js           # Mô hình bài viết
-│   └── User.js           # Mô hình người dùng
-├── middlewares/
-│   └── verifyToken.js    # Kiểm tra JWT
+```
+├── index.js
+├── config/
+│   └── cloudinary.js
 ├── controllers/
-│   └── authController.js # Đăng ký, đăng nhập
-│   └── postController.js # CRUD bài viết
-├── uploads/              # Không dùng vì ảnh được lưu trên Cloudinary
-└── .env                  # Chứa biến môi trường
+│   └── postController.js
+├── middlewares/
+│   ├── auth.js
+│   └── upload.js
+├── models/
+│   ├── post.js
+│   └── user.js
+├── uploads/         ← temporary (not used with Cloudinary)
+├── views/
+│   ├── login.html
+│   ├── register.html
+│   └── index.html
+├── .env             ← env file (JWT_SECRET, CLOUDINARY info)
+└── package.json
+```
 
-🔐 Biến môi trường .env
+## 🔐 Authentication Flow
 
-PORT=3000
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>
-JWT_SECRET=your_jwt_secret
+1. User registers or logs in → JWT is created and stored in cookie.
+2. Every page or API that requires login checks token validity.
+3. On creating/editing/deleting posts, the backend checks if user owns the post.
 
-🔒 Lưu ý: Không commit file .env lên GitHub
+## 🌍 Deployment (Render)
 
+1. Push this backend code to GitHub (e.g., `book-backend`).
+2. Create a new **Web Service** in [Render](https://render.com/).
+3. Connect to GitHub repo → Choose `book-backend`
+4. Add Environment Variables:
+   - `JWT_SECRET=your_secret`
+   - `MONGODB_URI=your_mongodb_atlas_url`
+   - `CLOUD_NAME`, `API_KEY`, `API_SECRET` for Cloudinary
+5. Build command: `npm install`
+6. Start command: `node index.js`
 
-☁️ Hướng dẫn deploy Backend trên Render
+---
 
-Push project lên GitHub
+# 📎 Notes
 
-Vào https://render.com
-
-Chọn New Web Service → kết nối GitHub repo
-
-Điền:
-
-Build Command: npm install
-
-Start Command: node index.js
-
-Environment: Node
-
-Thêm biến môi trường từ file .env
-
-Deploy và Render sẽ cấp URL Backend cho bạn
-
-✅ Yêu cầu trước khi sử dụng
-
-Node.js >= 18
-
-MongoDB Atlas account
-
-Tài khoản Cloudinary
+- **Frontend will call backend routes like** `/create`, `/edit/:id`, `/delete/:id`
+- You must be logged in to access `index.html`
+- No need to run locally if deploying on Render + Vercel.
